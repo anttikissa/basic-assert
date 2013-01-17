@@ -1,10 +1,10 @@
 {
   "name": "basic-assert",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The simplest possible assert",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "./test"
   },
   "repository": {
     "type": "git",

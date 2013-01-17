@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+var assert = require('./index');
+
+try {
+//	assert.is(1, 2);
+} catch (e) {
+	console.log("Got exception");
+	console.log(e);
+}
