@@ -1,0 +1,19 @@
+{
+  "name": "basic-assert",
+  "version": "0.0.1",
+  "description": "The simplest possible assert",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anttisykari/basic-assert"
+  },
+  "keywords": [
+    "assert",
+    "test"
+  ],
+  "author": "Antti Sykäri",
+  "license": "BSD"
+}
