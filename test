@@ -2,6 +2,8 @@
 
 var assert = require('./index');
 
+// TODO make testable
+
 try {
 //	assert.is(1, 2);
 } catch (e) {
