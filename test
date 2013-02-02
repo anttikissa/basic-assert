@@ -2,10 +2,13 @@
 
 var assert = require('./index');
 
+assert.fatal = false;
+
 // TODO make testable
 
 try {
-//	assert.is(1, 2);
+	assert.is(1, 2);
+	assert.is(2, 3);
 } catch (e) {
 	console.log("Got exception");
 	console.log(e);

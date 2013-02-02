@@ -18,6 +18,8 @@ assert.eq = function(lhs, rhs) {
 	}
 };
 
+assert.fatal = true;
+
 function error(msg) {
 	console.log("\nError: " + msg);
 	Error.prepareStackTrace = function(e, stackTrace) {
@@ -38,7 +40,9 @@ function error(msg) {
 	console.log(Array(column).join(' ') + "^");
 	err.stack.splice(0, 2);
 	console.log("\n" + err.stack.join('\n'));
-	process.exit(1);
+	if (assert.fatal) {
+		process.exit(1);
+	}
 }
 
 module.exports = assert;
