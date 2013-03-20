@@ -6,9 +6,16 @@ assert.fatal = false;
 
 // TODO make testable
 
+assert(1);
+assert.not('');
+assert.eq([1,2,3], [1,2,3]);
+assert.neq([1,2,3], [3,2,1]);
+assert.is(1 + 2 + 3, 3 + 2 + 1);
+assert.isnt([1,2,3], [1,2,3]);
+
 try {
-	assert.is(1, 2);
-	assert.is(2, 3);
+//	assert.is(1, 2);
+//	assert.is(2, 3);
 } catch (e) {
 	console.log("Got exception");
 	console.log(e);
