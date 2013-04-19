@@ -20,3 +20,5 @@ try {
 	console.log("Got exception");
 	console.log(e);
 }
+
+assert(false);
