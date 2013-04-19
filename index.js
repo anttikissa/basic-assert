@@ -42,12 +42,16 @@ assert.fatal = true;
 
 function error(msg) {
 	console.log("\nError: " + msg);
+
+	var oldPrepareStackTrace = Error.prepareStackTrace;
+
 	Error.prepareStackTrace = function(e, stackTrace) {
 		return stackTrace;
 	};
 	var err = new Error();
-
 	var callSite = err.stack[2];
+	Error.prepareStackTrace = oldPrepareStackTrace;
+
 	var filename = callSite.getFileName();
 	var file = require('fs').readFileSync(filename, 'utf8');
 	var relative = require('path').relative(process.cwd(), filename);
