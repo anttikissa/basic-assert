@@ -53,17 +53,57 @@ function error(msg) {
 	Error.prepareStackTrace = oldPrepareStackTrace;
 
 	var filename = callSite.getFileName();
-	var file = require('fs').readFileSync(filename, 'utf8');
-	var relative = require('path').relative(process.cwd(), filename);
 	var line = callSite.getLineNumber();
 	var column = callSite.getColumnNumber();
+
+	var lookupInSourceMap = function(filename, line, column) {
+		mainModule = require.main;
+		if (mainModule._sourceMaps && mainModule._sourceMaps[filename]) {
+			var map = mainModule._sourceMaps[filename];
+			var realPos = map.getSourcePosition([line - 1, column - 1]);
+			if (!realPos)
+				return [line, column];
+			return [realPos[0] + 1, realPos[1] + 1];
+		} else {
+			return [line, column];
+		}
+	};
+
+	var realPos = lookupInSourceMap(filename, line, column);
+	line = realPos[0];
+	column = realPos[1];
+
+	var file = require('fs').readFileSync(filename, 'utf8');
+	var relative = require('path').relative(process.cwd(), filename);
 
 	console.log("\nFile: " + relative);
 	console.log("Line: " + line);
 	console.log("\n" + file.split('\n')[line-1].replace(/\t/g, ' '));
 	console.log(Array(column).join(' ') + "^");
 	err.stack.splice(0, 2);
-	console.log("\n" + err.stack.join('\n'));
+	var mapped = err.stack.map(function(frame) {
+		var fun = frame.getFunctionName() || '<anonymous>';
+		var isConstructor = frame.isConstructor();
+		var isMethodCall = !(frame.isToplevel() || isConstructor);
+		if (isMethodCall) {
+			// TODO steal from coffee-script.coffee in more detail
+			/*
+			var object = frame.getTypeName();
+			if (object) {
+				fun = object + "." + fun;
+			} */
+		}
+		if (isConstructor) {
+			fun = "new " + fun;
+		}
+		var filename = frame.getScriptNameOrSourceURL();
+		var pos = lookupInSourceMap(
+			filename, frame.getLineNumber(), frame.getColumnNumber());
+
+		return fun + " (" + filename + ":" + pos[0] + ":" + pos[1] + ")";
+//		return frame.toString();
+	});
+	console.log("\n" + mapped.join('\n'));
 	if (assert.fatal) {
 		process.exit(1);
 	}
