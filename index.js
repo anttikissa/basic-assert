@@ -1,3 +1,5 @@
+var path = require('path');
+
 function assert(value) {
 	if (!value) {
 		error('Got "' + value + '",\nExpected:  a truthy value');
@@ -74,7 +76,7 @@ function error(msg) {
 	column = realPos[1];
 
 	var file = require('fs').readFileSync(filename, 'utf8');
-	var relative = require('path').relative(process.cwd(), filename);
+	var relative = path.relative(process.cwd(), filename);
 
 	console.log("\nFile: " + relative);
 	console.log("Line: " + line);
@@ -100,6 +102,16 @@ function error(msg) {
 		var pos = lookupInSourceMap(
 			filename, frame.getLineNumber(), frame.getColumnNumber());
 
+		if (filename) {
+			if (filename.match(/^\/usr/)) {
+				// These are too long otherwise.
+				filename = filename.replace('/usr/local/lib/node_modules/coffee-script/lib/coffee-script/',
+						'[coffeescript internal] ')
+			}
+			else {
+				filename = path.relative(process.cwd(), filename);
+			}
+		}
 		return fun + " (" + filename + ":" + pos[0] + ":" + pos[1] + ")";
 //		return frame.toString();
 	});
