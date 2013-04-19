@@ -6,12 +6,12 @@ assert = require './index'
 
 do ->
 	line = 1
-	for x in [1..100]
+	if true
 		line = x
 
 thirdAt16 = (a, b) ->
 	# Test that source maps work
-	for x in [1..10]
+	do (a) ->
 		if true
 			f.bar()
 
@@ -25,7 +25,7 @@ firstAt24 = ->
 
 class Foo
 	constructor: ->
-		#		assert !"fail at ctor"
+		assert !"fail at ctor"
 
 	bar: ->
 		assert !"fail at a class"
