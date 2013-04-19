@@ -21,4 +21,4 @@ try {
 	console.log(e);
 }
 
-assert(false);
+assert.eq([1,2,3], [1,2,3,4]);
