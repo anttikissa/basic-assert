@@ -40,6 +40,14 @@ assert.neq = function(lhs, rhs) {
 	}
 };
 
+assert.type = function(lhs, expectedType) {
+	actualType = typeof lhs;
+	if (actualType !== expectedType) {
+		error('Type of "' + lhs + '" was "' + actualType + '",\n' +
+			'Expected type: "' + expectedType + '"');
+	}
+}
+
 assert.fatal = true;
 
 function error(msg) {

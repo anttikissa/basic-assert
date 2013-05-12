@@ -21,4 +21,11 @@ try {
 	console.log(e);
 }
 
+assert.type("hello", 'string');
+assert.type(1234, 'number');
+assert.type({ a: 'b' }, 'object');
+assert.type([1,2,3], 'object');
+assert.type(function() {}, 'function');
+
+// This will fail.
 assert.eq([1,2,3], [1,2,3,4]);
