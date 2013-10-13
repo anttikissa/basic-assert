@@ -19,7 +19,7 @@ assert.not = function(value) {
 	if (value) {
 		error('Got ' + fmt(value) + ',\nExpected:  a falsy value');
 	}
-}
+};
 
 assert.is = function(lhs, rhs) {
 	if (lhs !== rhs) {
@@ -31,7 +31,7 @@ assert.isnt = function(lhs, rhs) {
 	if (lhs === rhs) {
 		error('Got ' + fmt(lhs) + ',\nbut shouldn\'t have!');
 	}
-}
+};
 
 assert.eq = function(lhs, rhs) {
 	var lhsS = JSON.stringify(lhs);
@@ -55,7 +55,7 @@ assert.type = function(lhs, expectedType) {
 		error('Type of ' + fmt(lhs) + ' was ' + actualType + ',\n' +
 			'Expected type: ' + expectedType + '');
 	}
-}
+};
 
 assert.fatal = true;
 
@@ -123,7 +123,7 @@ function error(msg) {
 			if (filename.match(/^\/usr/)) {
 				// These are too long otherwise.
 				filename = filename.replace('/usr/local/lib/node_modules/coffee-script/lib/coffee-script/',
-						'[coffeescript internal] ')
+						'[coffeescript internal] ');
 			}
 			else {
 				filename = path.relative(process.cwd(), filename);
