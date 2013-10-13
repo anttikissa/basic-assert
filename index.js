@@ -2,8 +2,20 @@ var path = require('path');
 
 // Format values so that the type is evident
 function fmt(value) {
-	if (typeof value == 'string') {
+	if (typeof value === 'string') {
 		return "'" + value + "'";
+	}
+
+	if (Object.prototype.toString.apply(value) === '[object Array]') {
+		return JSON.stringify(value);
+	}
+
+	if (Object.prototype.toString.apply(value) === '[object Date]') {
+		return "(Date) " + JSON.stringify(value);
+	}
+
+	if (typeof value === 'object') {
+		return JSON.stringify(value);
 	}
 
 	return value;
