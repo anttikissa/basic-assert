@@ -61,6 +61,30 @@ assert.neq = function(lhs, rhs) {
 	}
 };
 
+assert.lt = function(lhs, rhs) {
+	if (lhs >= rhs) {
+		error('Expected ' + fmt(lhs) + ' < ' + fmt(rhs));
+	}
+}
+
+assert.lte = function(lhs, rhs) {
+	if (lhs > rhs) {
+		error('Expected ' + fmt(lhs) + ' <= ' + fmt(rhs));
+	}
+}
+
+assert.gt = function(lhs, rhs) {
+	if (lhs <= rhs) {
+		error('Expected ' + fmt(lhs) + ' > ' + fmt(rhs));
+	}
+}
+
+assert.gte = function(lhs, rhs) {
+	if (lhs < rhs) {
+		error('Expected ' + fmt(lhs) + ' >= ' + fmt(rhs));
+	}
+}
+
 assert.type = function(lhs, expectedType) {
 	var actualType = typeof lhs;
 	if (actualType !== expectedType) {
