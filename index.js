@@ -1,26 +1,35 @@
 var path = require('path');
 
+// Format values so that the type is evident
+function fmt(value) {
+	if (typeof value == 'string') {
+		return "'" + value + "'";
+	}
+
+	return value;
+}
+
 function assert(value) {
 	if (!value) {
-		error('Got "' + value + '",\nExpected:  a truthy value');
+		error('Got ' + fmt(value) + ',\nExpected:  a truthy value');
 	}
 }
 
 assert.not = function(value) {
 	if (value) {
-		error('Got "' + value + '",\nExpected:  a falsy value');
+		error('Got ' + fmt(value) + ',\nExpected:  a falsy value');
 	}
 }
 
 assert.is = function(lhs, rhs) {
 	if (lhs !== rhs) {
-		error('Got "' + lhs + '",\nExpected:  "' + rhs + '"');
+		error('Got ' + fmt(lhs) + ',\nExpected:  ' + fmt(rhs));
 	}
 };
 
 assert.isnt = function(lhs, rhs) {
 	if (lhs === rhs) {
-		error('Got "' + lhs + '",\nbut shouldn\'t have!');
+		error('Got ' + fmt(lhs) + ',\nbut shouldn\'t have!');
 	}
 }
 
@@ -28,7 +37,7 @@ assert.eq = function(lhs, rhs) {
 	lhsS = JSON.stringify(lhs);
 	rhsS = JSON.stringify(rhs);
 	if (lhsS !== rhsS) {
-		error('Got "' + lhsS + '",\nExpected:  "' + rhsS + '"');
+		error('Got ' + lhsS + ',\nExpected:  ' + rhsS);
 	}
 };
 
@@ -36,15 +45,15 @@ assert.neq = function(lhs, rhs) {
 	lhsS = JSON.stringify(lhs);
 	rhsS = JSON.stringify(rhs);
 	if (lhsS === rhsS) {
-		error('Got "' + lhsS + '",\nbut shouldn\'t have!');
+		error('Got ' + lhsS + ',\nbut shouldn\'t have!');
 	}
 };
 
 assert.type = function(lhs, expectedType) {
 	actualType = typeof lhs;
 	if (actualType !== expectedType) {
-		error('Type of "' + lhs + '" was "' + actualType + '",\n' +
-			'Expected type: "' + expectedType + '"');
+		error('Type of ' + fmt(lhs) + ' was ' + actualType + ',\n' +
+			'Expected type: ' + expectedType + '');
 	}
 }
 
