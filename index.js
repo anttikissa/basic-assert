@@ -139,7 +139,3 @@ function error(msg) {
 }
 
 module.exports = assert;
-
-assert('string');
-assert.is(1 + 2, 3);
-
