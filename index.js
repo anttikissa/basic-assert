@@ -34,23 +34,23 @@ assert.isnt = function(lhs, rhs) {
 }
 
 assert.eq = function(lhs, rhs) {
-	lhsS = JSON.stringify(lhs);
-	rhsS = JSON.stringify(rhs);
+	var lhsS = JSON.stringify(lhs);
+	var rhsS = JSON.stringify(rhs);
 	if (lhsS !== rhsS) {
 		error('Got ' + lhsS + ',\nExpected:  ' + rhsS);
 	}
 };
 
 assert.neq = function(lhs, rhs) {
-	lhsS = JSON.stringify(lhs);
-	rhsS = JSON.stringify(rhs);
+	var lhsS = JSON.stringify(lhs);
+	var rhsS = JSON.stringify(rhs);
 	if (lhsS === rhsS) {
 		error('Got ' + lhsS + ',\nbut shouldn\'t have!');
 	}
 };
 
 assert.type = function(lhs, expectedType) {
-	actualType = typeof lhs;
+	var actualType = typeof lhs;
 	if (actualType !== expectedType) {
 		error('Type of ' + fmt(lhs) + ' was ' + actualType + ',\n' +
 			'Expected type: ' + expectedType + '');
