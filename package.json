@@ -1,6 +1,6 @@
 {
   "name": "basic-assert",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "The simplest possible assert",
   "main": "index.js",
   "scripts": {
