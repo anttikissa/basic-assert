@@ -1,5 +1,7 @@
 var path = require('path');
 
+var log = function() { console.log.apply(console, arguments); }
+
 // Format values so that the type is evident
 function fmt(value) {
 	if (typeof value === 'string') {
@@ -96,79 +98,47 @@ assert.type = function(lhs, expectedType) {
 assert.fatal = true;
 
 function error(msg) {
-	console.log("\nError: " + msg);
+    var err = new Error();
+    var lines = err.stack.trim().split('\n').slice(1);
+    var offendingLine = lines[2];
+    var match = offendingLine.match(/\((.*):([0-9]+):([0-9]+), <js>:.*\)/);
+    if (match) {
+//        log("Looks like CoffeeScript", match);
+        // Help IntelliJ IDEA to linkify this
+        lines[2] = lines[2].replace(/, <js>.*\)/, ')');
+    }
 
-	var oldPrepareStackTrace = Error.prepareStackTrace;
+    if (!match) {
+        var match = offendingLine.match(/\((.*):([0-9]+):([0-9]+)\)/);
+    }
 
-	Error.prepareStackTrace = function(e, stackTrace) {
-		return stackTrace;
-	};
-	var err = new Error();
-	var callSite = err.stack[2];
-	Error.prepareStackTrace = oldPrepareStackTrace;
+//    if (match) {
+//        log("Looks like JavaScript", match);
+//    }
 
-	var filename = callSite.getFileName();
-	var line = callSite.getLineNumber();
-	var column = callSite.getColumnNumber();
-
-	var lookupInSourceMap = function(filename, line, column) {
-		mainModule = require.main;
-		if (mainModule._sourceMaps && mainModule._sourceMaps[filename]) {
-			var map = mainModule._sourceMaps[filename];
-			var realPos = map.getSourcePosition([line - 1, column - 1]);
-			if (!realPos)
-				return [line, column];
-			return [realPos[0] + 1, realPos[1] + 1];
-		} else {
-			return [line, column];
-		}
-	};
-
-	var realPos = lookupInSourceMap(filename, line, column);
-	line = realPos[0];
-	column = realPos[1];
+    if (match) {
+        var filename = match[1];
+        var line = Number(match[2]);
+        var column = Number(match[3]);
+    } else {
+        log("Can't parse stack trace line", offendingLine);
+        throw err;
+    }
 
 	var file = require('fs').readFileSync(filename, 'utf8');
 	var relative = path.relative(process.cwd(), filename);
 
-	console.log("\nFile: " + relative);
-	console.log("Line: " + line);
-	console.log("\n" + file.split('\n')[line-1].replace(/\t/g, ' '));
-	console.log(Array(column).join(' ') + "^");
-	err.stack.splice(0, 2);
-	var mapped = err.stack.map(function(frame) {
-		var fun = frame.getFunctionName() || '<anonymous>';
-		var isConstructor = frame.isConstructor();
-		var isMethodCall = !(frame.isToplevel() || isConstructor);
-		if (isMethodCall) {
-			// TODO steal from coffee-script.coffee in more detail
-			/*
-			var object = frame.getTypeName();
-			if (object) {
-				fun = object + "." + fun;
-			} */
-		}
-		if (isConstructor) {
-			fun = "new " + fun;
-		}
-		var filename = frame.getScriptNameOrSourceURL();
-		var pos = lookupInSourceMap(
-			filename, frame.getLineNumber(), frame.getColumnNumber());
+	log("\nFile: " + relative);
+	log("Line: " + line);
+    log("\n" + msg);
+	log("\n" + file.split('\n')[line - 1].replace(/\t/g, ' '));
+	log(Array(column).join(' ') + "^");
+    log();
 
-		if (filename) {
-			if (filename.match(/^\/usr/)) {
-				// These are too long otherwise.
-				filename = filename.replace('/usr/local/lib/node_modules/coffee-script/lib/coffee-script/',
-						'[coffeescript internal] ');
-			}
-			else {
-				filename = path.relative(process.cwd(), filename);
-			}
-		}
-		return fun + " (" + filename + ":" + pos[0] + ":" + pos[1] + ")";
-//		return frame.toString();
-	});
-	console.log("\n" + mapped.join('\n'));
+    for (var i = 2; i < lines.length; i++) {
+        log(lines[i]);
+    }
+
 	if (assert.fatal) {
 		process.exit(1);
 	}

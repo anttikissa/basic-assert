@@ -3,6 +3,7 @@
 js = require './test-js-from-coffee'
 
 assert = require './index'
+assert.fatal = false
 
 do ->
 	line = 1
@@ -37,3 +38,8 @@ x = ->
 
 x()
 
+testAnotherModule = ->
+	test2 = require './test2'
+	test2.fail()
+
+testAnotherModule()
